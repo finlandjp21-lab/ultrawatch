@@ -17,11 +17,27 @@ jobs:
 
       # 1) Backtest: all core logic tests must pass before any APK is built
       - name: Run core tests
-        run: ./gradlew :core:test --stacktrace
+        run: |
+          chmod +x gradlew
+          ./gradlew :core:test --console=plain 2>&1 | tee test.log
+          exit ${PIPESTATUS[0]}
 
       # 2) Build watch and phone APKs
       - name: Build APKs
-        run: ./gradlew :app:assembleDebug :mobile:assembleDebug --stacktrace
+        run: |
+          ./gradlew :app:assembleDebug :mobile:assembleDebug --console=plain --continue 2>&1 | tee build.log
+          exit ${PIPESTATUS[0]}
+
+      # Turn the first compile errors into one annotation so they're readable without the full log
+      - name: Report errors
+        if: failure()
+        run: |
+          for f in test.log build.log; do
+            [ -f "$f" ] || continue
+            msg=$(grep -E "^e: |error:|What went wrong|FAILED|Could not|> " "$f" | grep -v "^> Task" | head -80 | sed 's/%/%25/g' | awk '{printf "%s%%0A", $0}')
+            [ -n "$msg" ] && echo "::error title=$f::$msg"
+          done
+          true
 
       - uses: actions/upload-artifact@v4
         with:
