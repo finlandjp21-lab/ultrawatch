@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lets the phone app see that UltraWatch is installed on this watch -->
+    <string-array name="android_wear_capabilities" translatable="false">
+        <item>ultrawatch_watch</item>
+    </string-array>
+</resources>

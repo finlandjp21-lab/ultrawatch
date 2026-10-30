@@ -109,6 +109,7 @@ private fun HomeTab() {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var watches by remember { mutableStateOf<Int?>(null) }
+    var conn by remember { mutableStateOf<WatchConnection.Status?>(null) }
     var health by remember { mutableStateOf<HealthRepo.Summary?>(null) }
     var hcGranted by remember { mutableStateOf(false) }
     val battery = remember { PhoneLink.battery(ctx) }
@@ -117,15 +118,38 @@ private fun HomeTab() {
     }
     LaunchedEffect(Unit) {
         watches = PhoneLink.sendBattery(ctx)
+        conn = WatchConnection.status(ctx)
         hcGranted = HealthRepo.granted(ctx)
         health = HealthRepo.summary(ctx)
     }
     LazyColumn {
         item { Footer() }
         item {
-            Section("Wear OS watch") {
-                Text(when (watches) { null -> "Looking for your watch..."; 0 -> "No Wear OS watch connected. Other brands: see the Watches tab."; else -> "Connected · sending phone battery (${battery?.first ?: "--"}%)" })
-                OutlinedButton(onClick = { scope.launch { watches = PhoneLink.sendBattery(ctx) } }) { Text("Sync now") }
+            Section("Your watch") {
+                val st = conn
+                when {
+                    st == null -> Text("Checking for your watch...")
+                    st.withUltraWatch.isNotEmpty() -> {
+                        Text("Connected: ${st.withUltraWatch.joinToString()}", color = Color(0xFF30D158))
+                        Text("UltraWatch is installed on the watch. Phone battery ${battery?.first ?: "--"}% is shared with it.", fontSize = 13.sp)
+                    }
+                    st.watches.isNotEmpty() -> {
+                        Text("Connected: ${st.watches.joinToString()}", color = Color(0xFFFFD60A))
+                        Text("UltraWatch isn't installed on this watch yet. Install UltraWatch-watch.apk on the watch (see README), then tap Check again.", fontSize = 13.sp)
+                    }
+                    else -> {
+                        Text("No Wear OS watch connected.", color = Color(0xFFFF453A))
+                        Text("Pair your watch in its own app below (or Bluetooth settings). Wear OS watches (Samsung, Pixel, OnePlus, Xiaomi Watch 2, TicWatch) then connect automatically.\n\nRealme, Nothing, Honor, Huawei, Amazfit and others stay paired in their own app; UltraWatch sends alerts to them as notifications — see the Watches tab.", fontSize = 13.sp)
+                    }
+                }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(onClick = { scope.launch { conn = null; watches = PhoneLink.sendBattery(ctx); conn = WatchConnection.status(ctx) } }) { Text("Check again") }
+                    OutlinedButton(onClick = { WatchConnection.openBluetooth(ctx) }) { Text("Bluetooth") }
+                }
+                val apps = remember { WatchConnection.installedPairingApps(ctx) }
+                if (apps.isNotEmpty()) Text("Open your watch's app to pair:", fontSize = 13.sp)
+                apps.forEach { (label, pkg) -> OutlinedButton(onClick = { WatchConnection.open(ctx, pkg) }, modifier = Modifier.fillMaxWidth()) { Text(label) } }
+                if (apps.isEmpty()) OutlinedButton(onClick = { WatchConnection.openStore(ctx, "com.google.android.wearable.app") }, modifier = Modifier.fillMaxWidth()) { Text("Get the Wear OS app") }
             }
         }
         item {

@@ -16,6 +16,20 @@
 
     <queries>
         <package android:name="com.google.android.apps.healthdata" />
+        <package android:name="com.samsung.android.app.watchmanager" />
+        <package android:name="com.google.android.apps.wear.companion" />
+        <package android:name="com.google.android.wearable.app" />
+        <package android:name="com.heytap.health.international" />
+        <package android:name="com.mobvoi.companion" />
+        <package android:name="com.xiaomi.wearable" />
+        <package android:name="com.realme.link" />
+        <package android:name="com.nothing.smartcenter" />
+        <package android:name="com.nothing.cmf.watch" />
+        <package android:name="com.huami.watch.hmwatchmanager" />
+        <package android:name="com.huawei.health" />
+        <package android:name="com.hihonor.health" />
+        <package android:name="com.coros.coros" />
+        <package android:name="com.vivo.health" />
     </queries>
 
     <application
