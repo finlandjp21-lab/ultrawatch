@@ -82,11 +82,12 @@ fun runVoiceCommand(ctx: Context, said: String, go: (String) -> Unit): String {
             ?: run { go("calls"); "No contact named ${c.who}" }
         is Command.Message -> {
             val who = ContactMatcher.bestMatch(c.who, contacts)
+            val text = c.text
             when {
                 who == null -> { go("messages"); "No contact named ${c.who}" }
-                c.text == null -> { Phone.composeSms(ctx, who.number, ""); "Message ${who.name}" }
-                Phone.sendSms(ctx, who.number, c.text) -> "Sent to ${who.name}"
-                else -> { Phone.composeSms(ctx, who.number, c.text); "Confirm send to ${who.name}" }
+                text == null -> { Phone.composeSms(ctx, who.number, ""); "Message ${who.name}" }
+                Phone.sendSms(ctx, who.number, text) -> "Sent to ${who.name}"
+                else -> { Phone.composeSms(ctx, who.number, text); "Confirm send to ${who.name}" }
             }
         }
         is Command.PlayMusic -> { MusicCommands.pending = c; go("music"); "Playing music" }
