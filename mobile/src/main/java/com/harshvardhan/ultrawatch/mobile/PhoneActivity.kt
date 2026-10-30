@@ -231,7 +231,7 @@ private fun SafetyTab() {
     var name by remember { mutableStateOf(p.name) }
     var status by remember { mutableStateOf<String?>(null) }
     val perms = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { r ->
-        status = if (r.values.all { it }) sendSos(ctx, p) else "Allow SMS, phone and location to use SOS"
+        status = sendSos(ctx, p) // location is optional; SOS still opens with no location
     }
     LazyColumn {
         item {
@@ -239,9 +239,12 @@ private fun SafetyTab() {
                 Text("For watches that can't run apps (Realme, Nothing, Honor...): SOS from the phone texts your location and calls your contact.", fontSize = 13.sp)
                 OutlinedTextField(name, { name = it; p.name = it }, label = { Text("Your name") }, singleLine = true, modifier = Modifier.fillMaxWidth())
                 OutlinedTextField(number, { number = it; p.sosNumber = it }, label = { Text("Emergency contact number") }, singleLine = true, modifier = Modifier.fillMaxWidth())
-                Button(onClick = { perms.launch(arrayOf(Manifest.permission.SEND_SMS, Manifest.permission.CALL_PHONE, Manifest.permission.ACCESS_FINE_LOCATION)) },
+                Button(onClick = { perms.launch(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)) },
                     colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFF453A)), modifier = Modifier.fillMaxWidth().height(64.dp)) { Text("SEND SOS", fontSize = 20.sp) }
                 status?.let { Text(it) }
+                if (number.isNotBlank()) OutlinedButton(onClick = {
+                    ctx.startActivity(Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                }, modifier = Modifier.fillMaxWidth()) { Text("Call $number") }
             }
         }
     }
@@ -254,10 +257,10 @@ private fun sendSos(ctx: android.content.Context, p: PhonePrefs): String {
     val loc = listOf(android.location.LocationManager.GPS_PROVIDER, android.location.LocationManager.NETWORK_PROVIDER)
         .mapNotNull { runCatching { lm.getLastKnownLocation(it) }.getOrNull() }.maxByOrNull { it.time }
     val msg = SosMessage.build(p.name, "SOS", loc?.latitude, loc?.longitude, loc?.accuracy)
-    val sms = ctx.getSystemService(android.telephony.SmsManager::class.java)
-    val ok = runCatching { sms.sendMultipartTextMessage(p.sosNumber, null, sms.divideMessage(msg), null, null) }.isSuccess
-    ctx.startActivity(Intent(Intent.ACTION_CALL, Uri.parse("tel:" + p.sosNumber)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
-    return if (ok) "SOS text sent, calling now" else "Couldn't send the text, calling now"
+    // No SMS/call permissions (Play Protect blocks sideloaded apps that have them):
+    // open the messaging app with the SOS text ready, then the dialer with the number filled in.
+    ctx.startActivity(Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:" + Uri.encode(p.sosNumber))).putExtra("sms_body", msg).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+    return "Tap Send in your messages app, then call ${p.sosNumber}"
 }
 
 @Composable
