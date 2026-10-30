@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UltraWatch</string>
+    <string name="credit">Created by Harshvardhan Technologies</string>
+    <string name="face_name">UltraWatch Luxe</string>
+    <string name="tile_health">UltraWatch health</string>
+    <string name="tile_markets">UltraWatch markets</string>
+    <string name="tile_safety">UltraWatch SOS</string>
+    <string name="comp_market">NIFTY 50</string>
+    <string name="comp_energy">Energy score</string>
+    <string name="listener_label">UltraWatch messages</string>
+</resources>

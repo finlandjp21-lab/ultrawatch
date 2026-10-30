@@ -1,0 +1,81 @@
+# Backtest results
+
+Core logic tests run on 2026-10-30 with Kotlin 2.1.0 (JVM): **74 passed, 0 failed**
+
+```
+PASS AppLockTest.correctAndWrongPin
+PASS AppLockTest.lockoutDoublesAndExpires
+PASS AppLockTest.persistsWithoutStoringPin
+PASS AppLockTest.rejectsBadPin
+PASS AppLockTest.unsetLockAlwaysOpens
+PASS AssistantAndSafetyTest.batteryEstimates
+PASS AssistantAndSafetyTest.chargeReminderHysteresis
+PASS AssistantAndSafetyTest.contactMatching
+PASS AssistantAndSafetyTest.countdownAndSafetyCheck
+PASS AssistantAndSafetyTest.fallDetectedOnFreeFallImpactStill
+PASS AssistantAndSafetyTest.noFallForArmSwingOrShortDrop
+PASS AssistantAndSafetyTest.quickReplies
+PASS AssistantAndSafetyTest.sosMessage
+PASS AssistantAndSafetyTest.translatorLanguages
+PASS AssistantAndSafetyTest.voiceCommands
+PASS DeviceBatteryTest.bleLevel
+PASS DeviceBatteryTest.kinds
+PASS DeviceBatteryTest.lowAlertOncePerDischarge
+PASS DeviceBatteryTest.payloadRoundTrip
+PASS DeviceBatteryTest.sortAndStale
+PASS FaceAndMediaTest.emptyQueueIsSafe
+PASS FaceAndMediaTest.faceConfigRoundTripsEveryPreset
+PASS FaceAndMediaTest.faceConfigToleratesGarbage
+PASS FaceAndMediaTest.handAngles
+PASS FaceAndMediaTest.pointsOnDial
+PASS FaceAndMediaTest.progressAndTicks
+PASS FaceAndMediaTest.queueNextPrevAndRepeat
+PASS FaceAndMediaTest.shuffleKeepsCurrentAndCoversAll
+PASS FaceAndMediaTest.slotsFitInsideRoundScreen
+PASS FaceAndMediaTest.timeFormatAndSearch
+PASS GnssTest.bands
+PASS GnssTest.coordinateFormats
+PASS GnssTest.fixQuality
+PASS GnssTest.summaryDetectsDualFrequency
+PASS GnssTest.waypointsRoundTrip
+PASS HealthMathTest.bpmToRrFiltersJunk
+PASS HealthMathTest.breathPhaseCycle
+PASS HealthMathTest.caloriesNeverNegativeAndRiseWithHr
+PASS HealthMathTest.deepMinutesNeedStillNeighbours
+PASS HealthMathTest.maxHeartRateTanaka
+PASS HealthMathTest.movementDetection
+PASS HealthMathTest.rmssdKnownValue
+PASS HealthMathTest.sleepScoreIdealAndPoor
+PASS HealthMathTest.stepsToDistance
+PASS HealthMathTest.stressScoreBoundsAndNullWhenSparse
+PASS HealthMathTest.vo2max
+PASS HealthMathTest.zonesAcrossRange
+PASS MarketsTest.aboveAlertFiresOnceOnCrossing
+PASS MarketsTest.alertsRoundTrip
+PASS MarketsTest.belowAlertOneShotIsRemoved
+PASS MarketsTest.demoFeedIsDeterministicAndBounded
+PASS MarketsTest.firstObservationBeyondLevelFires
+PASS MarketsTest.indianGrouping
+PASS MarketsTest.jsonEscapesAndNesting
+PASS MarketsTest.malformedJsonThrows
+PASS MarketsTest.movePctFiresOnlyOnce
+PASS MarketsTest.parseArrayAndWrappedShapesWithAliases
+PASS MarketsTest.parseSkipsBadItems
+PASS MarketsTest.quoteMaths
+PASS VitalsAndTrainingTest.bloodPressureCategories
+PASS VitalsAndTrainingTest.bodyCompositionFormulas
+PASS VitalsAndTrainingTest.energyScore
+PASS VitalsAndTrainingTest.environment
+PASS VitalsAndTrainingTest.gattBloodPressureAndPlx
+PASS VitalsAndTrainingTest.gattHeartRate
+PASS VitalsAndTrainingTest.gattScale
+PASS VitalsAndTrainingTest.gattSfloat
+PASS VitalsAndTrainingTest.geoBasics
+PASS VitalsAndTrainingTest.multisport
+PASS VitalsAndTrainingTest.odiCountsDipsPerHour
+PASS VitalsAndTrainingTest.rhythmIndicator
+PASS VitalsAndTrainingTest.spo2Labels
+PASS VitalsAndTrainingTest.trackBackGuidesHome
+PASS VitalsAndTrainingTest.trainingLoad
+74 passed, 0 failed
+```
